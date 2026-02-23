@@ -57,6 +57,14 @@ class BookedLoadResponse(BaseModel):
     offer_id: Optional[str] = None
     call_id: Optional[str] = None
     created_at: str
+    lane_origin: Optional[str] = None
+    lane_destination: Optional[str] = None
+    equipment_type: Optional[str] = None
+    loadboard_rate: Optional[float] = None
+    margin: Optional[float] = None
+    negotiation_rounds: Optional[int] = None
+    sentiment: Optional[str] = None
+    booked_at: Optional[str] = None
 
 
 class OfferCreateRequest(BaseModel):

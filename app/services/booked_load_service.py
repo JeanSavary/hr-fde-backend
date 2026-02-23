@@ -9,6 +9,18 @@ from app.db.repositories.booked_load_repo import (
 )
 
 
+def _enrich_booking(record: dict) -> BookedLoadResponse:
+    """Add computed margin and booked_at to a booking record."""
+    margin = None
+    loadboard_rate = record.get("loadboard_rate")
+    agreed_rate = record.get("agreed_rate")
+    if loadboard_rate and agreed_rate and loadboard_rate > 0:
+        margin = round(((loadboard_rate - agreed_rate) / loadboard_rate) * 100, 1)
+    record["margin"] = margin
+    record["booked_at"] = record.get("created_at")
+    return BookedLoadResponse(**record)
+
+
 def book_load(
     req: BookedLoadRequest,
 ) -> tuple[BookedLoadResponse, None] | tuple[None, str]:
@@ -47,8 +59,8 @@ def get_booking(
     load_id: str,
 ) -> BookedLoadResponse | None:
     record = get_booked_load(load_id)
-    return BookedLoadResponse(**record) if record else None
+    return _enrich_booking(record) if record else None
 
 
 def list_bookings() -> list[BookedLoadResponse]:
-    return [BookedLoadResponse(**r) for r in get_all_booked_loads()]
+    return [_enrich_booking(r) for r in get_all_booked_loads()]

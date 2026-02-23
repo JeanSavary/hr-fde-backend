@@ -37,7 +37,17 @@ def insert_booked_load(booking: dict) -> dict:
 def get_booked_load(load_id: str) -> dict | None:
     with get_db() as conn:
         row = conn.execute(
-            "SELECT * FROM booked_loads WHERE load_id=?",
+            """SELECT bl.*,
+                      l.origin        AS lane_origin,
+                      l.destination   AS lane_destination,
+                      l.equipment_type,
+                      l.loadboard_rate,
+                      c.negotiation_rounds,
+                      c.sentiment
+               FROM booked_loads bl
+               LEFT JOIN loads l ON bl.load_id = l.load_id
+               LEFT JOIN calls c ON bl.call_id = c.call_id
+               WHERE bl.load_id = ?""",
             (load_id,),
         ).fetchone()
     return dict(row) if row else None
@@ -46,6 +56,16 @@ def get_booked_load(load_id: str) -> dict | None:
 def get_all_booked_loads() -> list[dict]:
     with get_db() as conn:
         rows = conn.execute(
-            "SELECT * FROM booked_loads ORDER BY created_at DESC"
+            """SELECT bl.*,
+                      l.origin        AS lane_origin,
+                      l.destination   AS lane_destination,
+                      l.equipment_type,
+                      l.loadboard_rate,
+                      c.negotiation_rounds,
+                      c.sentiment
+               FROM booked_loads bl
+               LEFT JOIN loads l ON bl.load_id = l.load_id
+               LEFT JOIN calls c ON bl.call_id = c.call_id
+               ORDER BY bl.created_at DESC"""
         ).fetchall()
     return [dict(r) for r in rows]
