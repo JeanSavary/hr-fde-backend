@@ -68,11 +68,20 @@ def _build_rate_intelligence(bookings: list[dict]) -> RateIntelligence | None:
     avg_agreed = round(sum(agreed_rates) / len(agreed_rates), 2)
     discount = round(((avg_lb - avg_agreed) / avg_lb) * 100, 1) if avg_lb > 0 else None
 
+    # margin_pct: average of per-booking margins
+    per_booking_margins = []
+    for b in bookings:
+        lb = b.get("loadboard_rate")
+        ag = b.get("agreed_rate")
+        if lb and ag and lb > 0:
+            per_booking_margins.append(((lb - ag) / lb) * 100)
+    avg_margin = round(sum(per_booking_margins) / len(per_booking_margins), 1) if per_booking_margins else None
+
     return RateIntelligence(
         avg_loadboard=avg_lb,
         avg_agreed=avg_agreed,
         discount_pct=discount,
-        margin_pct=discount,  # Same metric
+        margin_pct=avg_margin,
     )
 
 
