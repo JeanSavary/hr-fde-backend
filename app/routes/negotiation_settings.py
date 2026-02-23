@@ -15,6 +15,7 @@ router = APIRouter(
     tags=["Settings"],
 )
 
+# Keep in sync with NegotiationSettingsResponse field types
 _BOOL_FIELDS = {"floor_rate_protection", "sentiment_escalation", "prioritize_perishables"}
 _INT_FIELDS = {
     "max_negotiation_rounds",

@@ -28,14 +28,24 @@ def get_setting(key: str) -> float | str | None:
     return row["value"]
 
 
-def upsert_setting(key: str, value: float) -> None:
+def upsert_setting(key: str, value: float | str | int) -> None:
     with get_db() as conn:
-        conn.execute(
-            """INSERT INTO negotiation_settings (key, value)
-               VALUES (?, ?)
-               ON CONFLICT(key) DO UPDATE SET value=excluded.value""",
-            (key, value),
-        )
+        if isinstance(value, str):
+            conn.execute(
+                """INSERT INTO negotiation_settings (key, value, text_value)
+                   VALUES (?, NULL, ?)
+                   ON CONFLICT(key) DO UPDATE
+                   SET text_value=excluded.text_value, value=NULL""",
+                (key, value),
+            )
+        else:
+            conn.execute(
+                """INSERT INTO negotiation_settings (key, value, text_value)
+                   VALUES (?, ?, NULL)
+                   ON CONFLICT(key) DO UPDATE
+                   SET value=excluded.value, text_value=NULL""",
+                (key, value),
+            )
 
 
 def upsert_all(settings: dict[str, float | str | int]) -> dict[str, float | str]:
