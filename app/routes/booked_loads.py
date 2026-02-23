@@ -1,6 +1,6 @@
-from fastapi import APIRouter, HTTPException, Security
+from fastapi import APIRouter, HTTPException, Query, Security
 
-from app.models.offer import BookedLoadRequest, BookedLoadResponse
+from app.models.offer import BookedLoadRequest, BookedLoadResponse, PaginatedBookedLoads
 from app.services.booked_load_service import (
     book_load,
     get_booking,
@@ -30,12 +30,15 @@ async def create_booking(req: BookedLoadRequest):
 
 @router.get(
     "",
-    response_model=list[BookedLoadResponse],
+    response_model=PaginatedBookedLoads,
     dependencies=[Security(verify_api_key)],
 )
-async def list_all_bookings():
-    """List all confirmed bookings."""
-    return list_bookings()
+async def list_all_bookings(
+    offset: int = Query(0, ge=0),
+    limit: int = Query(20, ge=1, le=100),
+):
+    """List confirmed bookings with pagination."""
+    return list_bookings(offset=offset, limit=limit)
 
 
 @router.get(

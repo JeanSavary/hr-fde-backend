@@ -53,8 +53,13 @@ def get_booked_load(load_id: str) -> dict | None:
     return dict(row) if row else None
 
 
-def get_all_booked_loads() -> list[dict]:
+def get_all_booked_loads(
+    offset: int = 0, limit: int = 20
+) -> tuple[list[dict], int]:
     with get_db() as conn:
+        total = conn.execute(
+            "SELECT COUNT(*) FROM booked_loads"
+        ).fetchone()[0]
         rows = conn.execute(
             """SELECT bl.*,
                       l.origin        AS lane_origin,
@@ -66,6 +71,8 @@ def get_all_booked_loads() -> list[dict]:
                FROM booked_loads bl
                LEFT JOIN loads l ON bl.load_id = l.load_id
                LEFT JOIN calls c ON bl.call_id = c.call_id
-               ORDER BY bl.created_at DESC"""
+               ORDER BY bl.created_at DESC
+               LIMIT ? OFFSET ?""",
+            (limit, offset),
         ).fetchall()
-    return [dict(r) for r in rows]
+    return [dict(r) for r in rows], total

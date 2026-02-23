@@ -1,6 +1,6 @@
 import uuid
 
-from app.models.offer import BookedLoadRequest, BookedLoadResponse
+from app.models.offer import BookedLoadRequest, BookedLoadResponse, PaginatedBookedLoads
 from app.db.repositories.load_repo import get_load_by_id
 from app.db.repositories.booked_load_repo import (
     insert_booked_load,
@@ -62,5 +62,11 @@ def get_booking(
     return _enrich_booking(record) if record else None
 
 
-def list_bookings() -> list[BookedLoadResponse]:
-    return [_enrich_booking(r) for r in get_all_booked_loads()]
+def list_bookings(offset: int = 0, limit: int = 20) -> PaginatedBookedLoads:
+    rows, total = get_all_booked_loads(offset=offset, limit=limit)
+    return PaginatedBookedLoads(
+        items=[_enrich_booking(r) for r in rows],
+        total=total,
+        offset=offset,
+        limit=limit,
+    )

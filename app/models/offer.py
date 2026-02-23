@@ -67,6 +67,13 @@ class BookedLoadResponse(BaseModel):
     booked_at: Optional[str] = None
 
 
+class PaginatedBookedLoads(BaseModel):
+    items: list[BookedLoadResponse]
+    total: int
+    offset: int
+    limit: int
+
+
 class OfferCreateRequest(BaseModel):
     call_id: Optional[str] = None
     load_id: str
