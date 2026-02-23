@@ -155,10 +155,7 @@ class PickupRescheduleRequest(BaseModel):
 
     @model_validator(mode="after")
     def at_least_one(self):
-        if (
-            self.new_pickup_datetime is None
-            and self.new_pickup_window is None
-        ):
+        if self.new_pickup_datetime is None and self.new_pickup_window is None:
             raise ValueError(
                 "Provide new_pickup_datetime or new_pickup_window"
             )

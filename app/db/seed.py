@@ -99,7 +99,7 @@ _DEFAULT_NEGOTIATION_SETTINGS = {
     "max_offers_per_call": 3,
     "auto_transfer_threshold": 500,
     "deadhead_warning_miles": 150,
-    "floor_rate_protection": 1,       # bool stored as 0/1
+    "floor_rate_protection": 1,  # bool stored as 0/1
     "sentiment_escalation": 1,
     "prioritize_perishables": 1,
 }

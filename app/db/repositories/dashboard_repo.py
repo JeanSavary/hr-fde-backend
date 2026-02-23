@@ -20,13 +20,16 @@ def get_bookings_with_loads_since(since: str | None = None) -> list[dict]:
     """Get bookings joined with loads, optionally filtered by date."""
     with get_db() as conn:
         if since:
-            rows = conn.execute("""
+            rows = conn.execute(
+                """
                 SELECT bl.*, l.loadboard_rate
                 FROM booked_loads bl
                 LEFT JOIN loads l ON bl.load_id = l.load_id
                 WHERE bl.created_at >= ?
                 ORDER BY bl.created_at DESC
-            """, (since,)).fetchall()
+            """,
+                (since,),
+            ).fetchall()
         else:
             rows = conn.execute("""
                 SELECT bl.*, l.loadboard_rate

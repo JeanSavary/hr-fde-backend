@@ -1,6 +1,10 @@
 import uuid
 
-from app.models.offer import BookedLoadRequest, BookedLoadResponse, PaginatedBookedLoads
+from app.models.offer import (
+    BookedLoadRequest,
+    BookedLoadResponse,
+    PaginatedBookedLoads,
+)
 from app.db.repositories.load_repo import get_load_by_id
 from app.db.repositories.booked_load_repo import (
     insert_booked_load,
@@ -17,7 +21,9 @@ def _enrich_booking(record: dict) -> BookedLoadResponse:
     loadboard_rate = record.get("loadboard_rate")
     agreed_rate = record.get("agreed_rate")
     if loadboard_rate and agreed_rate and loadboard_rate > 0:
-        margin = round(((loadboard_rate - agreed_rate) / loadboard_rate) * 100, 1)
+        margin = round(
+            ((loadboard_rate - agreed_rate) / loadboard_rate) * 100, 1
+        )
     record["margin"] = margin
     record["booked_at"] = record.get("created_at")
     return BookedLoadResponse(**record)
@@ -65,7 +71,11 @@ def get_booking(
 
 
 def list_bookings(
-    offset: int = 0, limit: int = 20, page: int = 1, page_size: int = 20, period: str = "last_month"
+    offset: int = 0,
+    limit: int = 20,
+    page: int = 1,
+    page_size: int = 20,
+    period: str = "last_month",
 ) -> PaginatedBookedLoads:
     since = period_since(period)
     rows, total = get_all_booked_loads(offset=offset, limit=limit, since=since)

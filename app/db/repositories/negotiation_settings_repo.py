@@ -48,7 +48,9 @@ def upsert_setting(key: str, value: float | str | int) -> None:
             )
 
 
-def upsert_all(settings: dict[str, float | str | int]) -> dict[str, float | str]:
+def upsert_all(
+    settings: dict[str, float | str | int],
+) -> dict[str, float | str]:
     with get_db() as conn:
         for key, value in settings.items():
             if isinstance(value, str):

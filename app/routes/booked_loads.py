@@ -1,6 +1,10 @@
 from fastapi import APIRouter, HTTPException, Query, Security
 
-from app.models.offer import BookedLoadRequest, BookedLoadResponse, PaginatedBookedLoads
+from app.models.offer import (
+    BookedLoadRequest,
+    BookedLoadResponse,
+    PaginatedBookedLoads,
+)
 from app.services.booked_load_service import (
     book_load,
     get_booking,
@@ -37,11 +41,19 @@ async def create_booking(req: BookedLoadRequest):
 async def list_all_bookings(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
-    period: Period = Query(Period.last_month, description="Time period filter"),
+    period: Period = Query(
+        Period.last_month, description="Time period filter"
+    ),
 ):
     """List confirmed bookings with pagination."""
     offset = (page - 1) * page_size
-    return list_bookings(offset=offset, limit=page_size, page=page, page_size=page_size, period=period.value)
+    return list_bookings(
+        offset=offset,
+        limit=page_size,
+        page=page,
+        page_size=page_size,
+        period=period.value,
+    )
 
 
 @router.get(

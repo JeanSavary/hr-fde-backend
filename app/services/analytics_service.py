@@ -54,6 +54,7 @@ def _negotiation_depth() -> list[NegotiationDepthBucket]:
 
 # ── Carrier objections ───────────────────────────────────────────────────────
 
+
 def _carrier_objections() -> list[CarrierObjection]:
     """Top reasons carriers decline (failed/dropped calls, last 30 days).
 
@@ -89,6 +90,7 @@ def _carrier_objections() -> list[CarrierObjection]:
 
 
 # ── Top lanes ────────────────────────────────────────────────────────────────
+
 
 def _top_lanes() -> list[TopLane]:
     """Highest volume lanes (last 30 days, top 5)."""
@@ -128,12 +130,14 @@ def _top_lanes() -> list[TopLane]:
         else:
             avg_rate = "$0"
 
-        result.append(TopLane(
-            lane=lane,
-            calls=calls_count,
-            bookings=bookings,
-            avg_rate=avg_rate,
-        ))
+        result.append(
+            TopLane(
+                lane=lane,
+                calls=calls_count,
+                bookings=bookings,
+                avg_rate=avg_rate,
+            )
+        )
 
     return result
 
@@ -169,11 +173,13 @@ def _equipment_demand_supply() -> list[EquipmentDemandSupply]:
     for eq in all_types:
         demand_pct = round(demand_raw.get(eq, 0) / demand_total * 100)
         supply_pct = round(supply_raw.get(eq, 0) / supply_total * 100)
-        result.append(EquipmentDemandSupply(
-            type=_format_equip(eq),
-            demand=demand_pct,
-            supply=supply_pct,
-        ))
+        result.append(
+            EquipmentDemandSupply(
+                type=_format_equip(eq),
+                demand=demand_pct,
+                supply=supply_pct,
+            )
+        )
 
     # Sort by demand descending for readability
     result.sort(key=lambda x: x.demand, reverse=True)
@@ -181,6 +187,7 @@ def _equipment_demand_supply() -> list[EquipmentDemandSupply]:
 
 
 # ── Public entry point ───────────────────────────────────────────────────────
+
 
 def get_analytics() -> AnalyticsResponse:
     return AnalyticsResponse(

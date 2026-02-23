@@ -1,6 +1,11 @@
 from datetime import datetime, timedelta, timezone
 
-from app.db.repositories.load_repo import get_all_loads, get_load_by_id, get_loads_paginated, get_loads_kpis
+from app.db.repositories.load_repo import (
+    get_all_loads,
+    get_load_by_id,
+    get_loads_paginated,
+    get_loads_kpis,
+)
 from app.db.repositories.negotiation_settings_repo import get_all_settings
 from app.models.load import (
     AlternativeLoad,
@@ -17,16 +22,31 @@ from app.db.city_data import get_location_meta
 from app.utils.geo import haversine_miles, resolve_location
 from app.utils.period import period_since
 
-_PERISHABLE_KEYWORDS = {"temp-controlled", "seafood", "produce", "frozen", "perishable", "dairy", "meat"}
+_PERISHABLE_KEYWORDS = {
+    "temp-controlled",
+    "seafood",
+    "produce",
+    "frozen",
+    "perishable",
+    "dairy",
+    "meat",
+}
 
 
-def _compute_urgency(pitch_count: int, days_listed: int, commodity: str, notes: str) -> str:
+def _compute_urgency(
+    pitch_count: int, days_listed: int, commodity: str, notes: str
+) -> str:
     commodity_lower = commodity.lower()
     notes_lower = notes.lower()
     is_perishable = any(kw in commodity_lower for kw in _PERISHABLE_KEYWORDS)
 
     # Critical
-    if pitch_count > 8 or days_listed >= 2 or is_perishable or "dead-end" in notes_lower:
+    if (
+        pitch_count > 8
+        or days_listed >= 2
+        or is_perishable
+        or "dead-end" in notes_lower
+    ):
         return "critical"
     # High
     if pitch_count > 4 or days_listed >= 1:
@@ -200,13 +220,9 @@ async def search_loads(
 
         equip_ok = load["equipment_type"] == equip
         max_dist_ok = (
-            max_distance_miles is None
-            or load["miles"] <= max_distance_miles
+            max_distance_miles is None or load["miles"] <= max_distance_miles
         )
-        weight_ok = (
-            max_weight is None
-            or load["weight"] <= max_weight
-        )
+        weight_ok = max_weight is None or load["weight"] <= max_weight
         date_ok = True
         if pickup_datetime:
             ask_dt = _parse_pickup(pickup_datetime)
@@ -322,9 +338,7 @@ async def search_loads(
                 **load,
                 rate_per_mile=round(rate / miles, 2),
                 deadhead_miles=round(o_dist, 1),
-                deadend_miles=round(d_dist, 1)
-                if d_dist is not None
-                else 0.0,
+                deadend_miles=round(d_dist, 1) if d_dist is not None else 0.0,
                 floor_rate=round(rate * (1 - target_margin), 2),
                 max_rate=round(rate * (1 + max_bump), 2),
                 differences=diffs,
@@ -354,9 +368,7 @@ async def search_loads(
         # then destination proximity, then rate, then distance.
         alternatives.sort(
             key=lambda a: (
-                int(
-                    any("Equipment" in d for d in a.differences)
-                ),
+                int(any("Equipment" in d for d in a.differences)),
                 a.deadhead_miles,
                 a.deadend_miles,
                 -a.loadboard_rate,
@@ -410,7 +422,14 @@ async def search_loads_by_lane(
             )
         )
 
-    matches.sort(key=lambda m: (m.deadhead_miles, m.deadend_miles, -m.loadboard_rate, m.miles))
+    matches.sort(
+        key=lambda m: (
+            m.deadhead_miles,
+            m.deadend_miles,
+            -m.loadboard_rate,
+            m.miles,
+        )
+    )
 
     return LoadSearchResponse(
         loads=matches,
@@ -476,11 +495,17 @@ def list_loads(
         )
 
         miles = r.get("miles", 0)
-        rate_per_mile = round(r["loadboard_rate"] / miles, 2) if miles > 0 else None
+        rate_per_mile = (
+            round(r["loadboard_rate"] / miles, 2) if miles > 0 else None
+        )
 
         db_status = r.get("status", "available")
         active_thinking = r.get("active_thinking_calls", 0)
-        effective_status = "matching" if db_status == "available" and active_thinking > 0 else db_status
+        effective_status = (
+            "matching"
+            if db_status == "available" and active_thinking > 0
+            else db_status
+        )
 
         extra_keys = {"pitch_count", "active_thinking_calls", "status"}
         base = {k: v for k, v in r.items() if k not in extra_keys}
@@ -504,7 +529,12 @@ def list_loads(
     critical_count = 0
     for r in kpi_data["urgency_data"]:
         dl = _days_listed_from_created_at(r.get("created_at"), now)
-        u = _compute_urgency(r.get("pitch_count", 0), dl, r.get("commodity_type", ""), r.get("notes", ""))
+        u = _compute_urgency(
+            r.get("pitch_count", 0),
+            dl,
+            r.get("commodity_type", ""),
+            r.get("notes", ""),
+        )
         if u == "critical":
             critical_count += 1
 

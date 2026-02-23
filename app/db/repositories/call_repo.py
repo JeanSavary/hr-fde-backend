@@ -135,7 +135,9 @@ def get_calls_kpis(since: Optional[str] = None) -> dict:
 
     return {
         "kpi_total_calls": total,
-        "kpi_booking_rate": round((booked / total) * 100, 1) if total > 0 else 0,
+        "kpi_booking_rate": round((booked / total) * 100, 1)
+        if total > 0
+        else 0,
         "kpi_avg_duration": round(total_duration / total) if total > 0 else 0,
         "kpi_total_duration": total_duration,
     }

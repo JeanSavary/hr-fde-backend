@@ -4,7 +4,12 @@ from app.db.repositories.dashboard_repo import (
     get_bookings_with_loads_since,
     get_offers_for_calls,
 )
-from app.models.dashboard import DashboardMetrics, FunnelStage, RateIntelligence, RecentCall
+from app.models.dashboard import (
+    DashboardMetrics,
+    FunnelStage,
+    RateIntelligence,
+    RecentCall,
+)
 
 
 # ── Period helpers ───────────────────────────────────────────────────────────
@@ -39,6 +44,7 @@ def _filter_before(rows: list[dict], cutoff: str) -> list[dict]:
 
 # ── Trend helpers ────────────────────────────────────────────────────────────
 
+
 def _compute_trend(current: float, previous: float) -> str | None:
     if previous == 0:
         return None
@@ -57,18 +63,25 @@ def _compute_conversion_trend(current: float, previous: float) -> str | None:
 
 # ── Funnel ───────────────────────────────────────────────────────────────────
 
+
 def _build_funnel(calls: list[dict], offers: list[dict]) -> list[FunnelStage]:
     total = len(calls)
     if total == 0:
         return []
 
     authenticated = [c for c in calls if c["outcome"] != "invalid_carrier"]
-    load_matched = [c for c in authenticated if c["outcome"] != "no_loads_available"]
+    load_matched = [
+        c for c in authenticated if c["outcome"] != "no_loads_available"
+    ]
 
     call_ids_with_offers = {o["call_id"] for o in offers if o.get("call_id")}
-    offer_made = [c for c in load_matched if c["call_id"] in call_ids_with_offers]
+    offer_made = [
+        c for c in load_matched if c["call_id"] in call_ids_with_offers
+    ]
 
-    negotiated = [c for c in offer_made if (c.get("negotiation_rounds") or 0) >= 1]
+    negotiated = [
+        c for c in offer_made if (c.get("negotiation_rounds") or 0) >= 1
+    ]
     booked = [c for c in negotiated if c["outcome"] == "booked"]
 
     stages = [
@@ -88,11 +101,14 @@ def _build_funnel(calls: list[dict], offers: list[dict]) -> list[FunnelStage]:
 
 # ── Rate intelligence ────────────────────────────────────────────────────────
 
+
 def _build_rate_intelligence(bookings: list[dict]) -> RateIntelligence:
     if not bookings:
         return RateIntelligence()
 
-    loadboard_rates = [b["loadboard_rate"] for b in bookings if b.get("loadboard_rate")]
+    loadboard_rates = [
+        b["loadboard_rate"] for b in bookings if b.get("loadboard_rate")
+    ]
     agreed_rates = [b["agreed_rate"] for b in bookings if b.get("agreed_rate")]
 
     if not loadboard_rates or not agreed_rates:
@@ -100,7 +116,11 @@ def _build_rate_intelligence(bookings: list[dict]) -> RateIntelligence:
 
     avg_lb = round(sum(loadboard_rates) / len(loadboard_rates), 2)
     avg_agreed = round(sum(agreed_rates) / len(agreed_rates), 2)
-    discount = round(((avg_lb - avg_agreed) / avg_lb) * 100, 1) if avg_lb > 0 else None
+    discount = (
+        round(((avg_lb - avg_agreed) / avg_lb) * 100, 1)
+        if avg_lb > 0
+        else None
+    )
 
     per_booking_margins = []
     for b in bookings:
@@ -108,7 +128,11 @@ def _build_rate_intelligence(bookings: list[dict]) -> RateIntelligence:
         ag = b.get("agreed_rate")
         if lb and ag and lb > 0:
             per_booking_margins.append(((lb - ag) / lb) * 100)
-    avg_margin = round(sum(per_booking_margins) / len(per_booking_margins), 1) if per_booking_margins else None
+    avg_margin = (
+        round(sum(per_booking_margins) / len(per_booking_margins), 1)
+        if per_booking_margins
+        else None
+    )
 
     return RateIntelligence(
         avg_loadboard=avg_lb,
@@ -119,6 +143,7 @@ def _build_rate_intelligence(bookings: list[dict]) -> RateIntelligence:
 
 
 # ── Aggregate metrics from a set of calls ────────────────────────────────────
+
 
 def _trim_recent_calls(calls: list[dict]) -> list[RecentCall]:
     return [
@@ -163,23 +188,31 @@ def _aggregate_calls(calls: list[dict]) -> dict:
     diffs = []
     for c in booked_calls:
         if c["initial_rate"] and c["final_rate"] and c["initial_rate"] > 0:
-            diffs.append(((c["final_rate"] - c["initial_rate"]) / c["initial_rate"]) * 100)
+            diffs.append(
+                ((c["final_rate"] - c["initial_rate"]) / c["initial_rate"])
+                * 100
+            )
     avg_diff = sum(diffs) / len(diffs) if diffs else None
 
-    total_rev = sum(c["final_rate"] for c in booked_calls if c["final_rate"]) or 0.0
+    total_rev = (
+        sum(c["final_rate"] for c in booked_calls if c["final_rate"]) or 0.0
+    )
 
     return {
         "total_calls": total,
         "calls_by_outcome": outcomes,
         "sentiment_distribution": sentiments,
         "booking_rate_percent": round(booking_rate, 1),
-        "avg_rate_differential_percent": round(avg_diff, 1) if avg_diff else None,
+        "avg_rate_differential_percent": round(avg_diff, 1)
+        if avg_diff
+        else None,
         "total_revenue": round(total_rev, 2),
         "recent_calls": _trim_recent_calls(calls),
     }
 
 
 # ── Public entry point ───────────────────────────────────────────────────────
+
 
 def get_dashboard_metrics(period: str = "today") -> DashboardMetrics:
     current_since, previous_since = _period_range(period)
@@ -216,9 +249,15 @@ def get_dashboard_metrics(period: str = "today") -> DashboardMetrics:
     revenue_prev = sum(b.get("agreed_rate", 0) for b in prev_bookings)
 
     conversion = round((n_booked / n_calls) * 100, 1) if n_calls > 0 else 0
-    conversion_prev = round((n_booked_prev / n_calls_prev) * 100, 1) if n_calls_prev > 0 else 0
+    conversion_prev = (
+        round((n_booked_prev / n_calls_prev) * 100, 1)
+        if n_calls_prev > 0
+        else 0
+    )
 
-    pending_transfer = len([c for c in current_calls if c["outcome"] == "transferred_to_ops"])
+    pending_transfer = len(
+        [c for c in current_calls if c["outcome"] == "transferred_to_ops"]
+    )
 
     # Funnel for the period
     funnel = _build_funnel(current_calls, period_offers)
@@ -229,19 +268,31 @@ def get_dashboard_metrics(period: str = "today") -> DashboardMetrics:
     # Trends (None for all_time)
     has_trend = previous_since is not None
 
-    base_data.update({
-        "period": period,
-        "calls_today": n_calls,
-        "calls_trend": _compute_trend(n_calls, n_calls_prev) if has_trend else None,
-        "booked_today": n_booked,
-        "booked_trend": _compute_trend(n_booked, n_booked_prev) if has_trend else None,
-        "revenue_today": round(revenue, 2),
-        "revenue_trend": _compute_trend(revenue, revenue_prev) if has_trend else None,
-        "conversion_rate": conversion,
-        "conversion_trend": _compute_conversion_trend(conversion, conversion_prev) if has_trend else None,
-        "pending_transfer": pending_transfer,
-        "funnel_data": funnel,
-        "rate_intelligence": rate_intel,
-    })
+    base_data.update(
+        {
+            "period": period,
+            "calls_today": n_calls,
+            "calls_trend": _compute_trend(n_calls, n_calls_prev)
+            if has_trend
+            else None,
+            "booked_today": n_booked,
+            "booked_trend": _compute_trend(n_booked, n_booked_prev)
+            if has_trend
+            else None,
+            "revenue_today": round(revenue, 2),
+            "revenue_trend": _compute_trend(revenue, revenue_prev)
+            if has_trend
+            else None,
+            "conversion_rate": conversion,
+            "conversion_trend": _compute_conversion_trend(
+                conversion, conversion_prev
+            )
+            if has_trend
+            else None,
+            "pending_transfer": pending_transfer,
+            "funnel_data": funnel,
+            "rate_intelligence": rate_intel,
+        }
+    )
 
     return DashboardMetrics(**base_data)

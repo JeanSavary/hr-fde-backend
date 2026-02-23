@@ -13,7 +13,15 @@ from app.config import get_settings
 from app.db.schema import init_db
 from app.db.seed import seed_cities, seed_loads, seed_negotiation_settings
 from app.db.seed_history import seed_historical_data
-from app.routes import health, carriers, loads, offers, calls, dashboard, analytics
+from app.routes import (
+    health,
+    carriers,
+    loads,
+    offers,
+    calls,
+    dashboard,
+    analytics,
+)
 from app.routes import carrier_interactions, booked_loads, negotiation_settings
 
 

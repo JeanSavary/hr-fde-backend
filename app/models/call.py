@@ -13,6 +13,7 @@ class CallLogRequest(BaseModel):
         if v is not None:
             return str(v)
         return v
+
     carrier_name: Optional[str] = None
     lane_origin: Optional[str] = None
     lane_destination: Optional[str] = None

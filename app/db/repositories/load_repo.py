@@ -11,7 +11,13 @@ def get_all_loads() -> list[dict]:
         return [dict(r) for r in rows]
 
 
-_ALLOWED_SORT_FIELDS = {"pickup_datetime", "loadboard_rate", "miles", "created_at", "weight"}
+_ALLOWED_SORT_FIELDS = {
+    "pickup_datetime",
+    "loadboard_rate",
+    "miles",
+    "created_at",
+    "weight",
+}
 _ALLOWED_ORDER = {"asc", "desc"}
 
 

@@ -31,14 +31,16 @@ async def log_call_route(req: CallLogRequest):
     dependencies=[Security(verify_api_key)],
 )
 async def list_calls_route(
-    outcome: Optional[str] = Query(
-        None, description="Filter by call outcome"
-    ),
+    outcome: Optional[str] = Query(None, description="Filter by call outcome"),
     sentiment: Optional[str] = Query(
         None, description="Filter by carrier sentiment"
     ),
-    mc_number: Optional[str] = Query(None, description="Filter by carrier MC number"),
-    period: Period = Query(Period.last_month, description="Time period filter"),
+    mc_number: Optional[str] = Query(
+        None, description="Filter by carrier MC number"
+    ),
+    period: Period = Query(
+        Period.last_month, description="Time period filter"
+    ),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Results per page"),
 ):

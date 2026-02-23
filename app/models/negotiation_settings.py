@@ -40,7 +40,8 @@ class NegotiationSettingsResponse(BaseModel):
         description="Greeting message used by the AI agent",
     )
     agent_tone: str = Field(
-        "professional", description="Tone of the AI agent (e.g. professional, friendly)"
+        "professional",
+        description="Tone of the AI agent (e.g. professional, friendly)",
     )
 
 

@@ -102,7 +102,8 @@ async def list_loads_route(
         None, description="Filter by load status (available, booked, or 'all')"
     ),
     equipment_type: Optional[str] = Query(
-        None, description="Filter by equipment type (dry_van, reefer, flatbed, step_deck, power_only)"
+        None,
+        description="Filter by equipment type (dry_van, reefer, flatbed, step_deck, power_only)",
     ),
     origin: Optional[str] = Query(
         None, description="Filter by origin city (partial match)"
@@ -113,13 +114,11 @@ async def list_loads_route(
     urgency: Optional[str] = Query(
         None, description="Filter by urgency: critical, high, normal"
     ),
-    period: Period = Query(Period.last_month, description="Time period filter"),
-    sort: str = Query(
-        "pickup_datetime", description="Sort field"
+    period: Period = Query(
+        Period.last_month, description="Time period filter"
     ),
-    order: str = Query(
-        "asc", description="Sort order: asc or desc"
-    ),
+    sort: str = Query("pickup_datetime", description="Sort field"),
+    order: str = Query("asc", description="Sort order: asc or desc"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Results per page"),
 ):

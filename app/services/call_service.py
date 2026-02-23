@@ -27,27 +27,31 @@ def log_call(req: CallLogRequest) -> CallLogResponse:
 
     # Cascade: create carrier interaction record
     if req.mc_number:
-        insert_interaction({
-            "mc_number": str(req.mc_number),
-            "carrier_name": req.carrier_name,
-            "call_id": result["call_id"],
-            "call_length_seconds": req.duration_seconds or 0,
-            "outcome": result["outcome"],
-            "load_id": req.load_id,
-            "notes": "",
-        })
+        insert_interaction(
+            {
+                "mc_number": str(req.mc_number),
+                "carrier_name": req.carrier_name,
+                "call_id": result["call_id"],
+                "call_length_seconds": req.duration_seconds or 0,
+                "outcome": result["outcome"],
+                "load_id": req.load_id,
+                "notes": "",
+            }
+        )
 
     # Cascade: if booked, create booked_loads record and mark load unavailable
     if req.outcome.value == "booked" and req.load_id:
-        insert_booked_load({
-            "load_id": req.load_id,
-            "mc_number": str(req.mc_number) if req.mc_number else "",
-            "carrier_name": req.carrier_name,
-            "agreed_rate": req.final_rate or 0,
-            "agreed_pickup_datetime": None,
-            "offer_id": None,
-            "call_id": result["call_id"],
-        })
+        insert_booked_load(
+            {
+                "load_id": req.load_id,
+                "mc_number": str(req.mc_number) if req.mc_number else "",
+                "carrier_name": req.carrier_name,
+                "agreed_rate": req.final_rate or 0,
+                "agreed_pickup_datetime": None,
+                "offer_id": None,
+                "call_id": result["call_id"],
+            }
+        )
 
     return CallLogResponse(
         id=result["id"],

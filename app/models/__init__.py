@@ -30,7 +30,12 @@ from app.models.offer import (
     BookedLoadRequest,
     BookedLoadResponse,
 )
-from app.models.call import CallLogRequest, CallLogResponse, CallDetailResponse, CallListResponse
+from app.models.call import (
+    CallLogRequest,
+    CallLogResponse,
+    CallDetailResponse,
+    CallListResponse,
+)
 from app.models.dashboard import DashboardMetrics
 
 __all__ = [

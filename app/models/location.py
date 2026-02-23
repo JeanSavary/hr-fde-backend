@@ -29,9 +29,7 @@ class ResolvedLocation(BaseModel):
         return self.type == LocationType.REGION
 
     @staticmethod
-    def city(
-        name: str, lat: float, lng: float
-    ) -> "ResolvedLocation":
+    def city(name: str, lat: float, lng: float) -> "ResolvedLocation":
         return ResolvedLocation(
             type=LocationType.CITY,
             label=name,
@@ -41,12 +39,8 @@ class ResolvedLocation(BaseModel):
 
     @staticmethod
     def state(abbrev: str) -> "ResolvedLocation":
-        return ResolvedLocation(
-            type=LocationType.STATE, label=abbrev
-        )
+        return ResolvedLocation(type=LocationType.STATE, label=abbrev)
 
     @staticmethod
     def region(name: str) -> "ResolvedLocation":
-        return ResolvedLocation(
-            type=LocationType.REGION, label=name
-        )
+        return ResolvedLocation(type=LocationType.REGION, label=name)

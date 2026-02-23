@@ -18,9 +18,7 @@ _MILES_COUNTER_TOLERANCE = 0.20
 
 
 def _parse_dt(dt_str: str) -> datetime:
-    dt = datetime.fromisoformat(
-        dt_str.replace("Z", "+00:00")
-    )
+    dt = datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
     return dt
@@ -45,10 +43,7 @@ def analyze_offer(
     if req.asking_radius_miles is not None:
         load_miles = load["miles"]
         over = load_miles - req.asking_radius_miles
-        tolerance = int(
-            req.asking_radius_miles
-            * _MILES_COUNTER_TOLERANCE
-        )
+        tolerance = int(req.asking_radius_miles * _MILES_COUNTER_TOLERANCE)
         counter_max = req.asking_radius_miles + tolerance
 
         if load_miles <= req.asking_radius_miles:
@@ -76,9 +71,7 @@ def analyze_offer(
         try:
             ask_date = _parse_dt(req.asking_pickup_datetime)
         except (ValueError, TypeError):
-            ask_date = _parse_dt(
-                req.asking_pickup_datetime + "T00:00:00Z"
-            )
+            ask_date = _parse_dt(req.asking_pickup_datetime + "T00:00:00Z")
         secs = (ask_date - load_pickup).total_seconds()
         hours_off = round(abs(secs) / 3600, 1)
         direction = "later" if secs > 0 else "earlier"
@@ -118,9 +111,7 @@ def analyze_offer(
         fmt = "%Y-%m-%d %H:%M UTC"
 
         if load_pickup < now:
-            rejects.append(
-                "Pickup time has already passed"
-            )
+            rejects.append("Pickup time has already passed")
         elif load_pickup <= window_end:
             accepts["pickup_window"] = (
                 f"Pickup in {hours_until}h"
@@ -136,23 +127,21 @@ def analyze_offer(
             )
         else:
             rejects.append(
-                f"Pickup is {hours_until}h away"
-                f" — well beyond {wh}h window"
+                f"Pickup is {hours_until}h away — well beyond {wh}h window"
             )
 
     # ── Rate (priority 4) ────────────────────────────
     if req.asking_rate is not None:
         original = load["loadboard_rate"]
         ceiling = round(original * rate_ceiling_pct, 2)
-        reject_line = round(
-            original * _RATE_REJECT_MULTIPLIER, 2
-        )
+        reject_line = round(original * _RATE_REJECT_MULTIPLIER, 2)
         pct = (
             round(
-                ((req.asking_rate - original) / original)
-                * 100, 1,
+                ((req.asking_rate - original) / original) * 100,
+                1,
             )
-            if original else 0
+            if original
+            else 0
         )
 
         if req.asking_rate <= ceiling:
@@ -218,26 +207,17 @@ def create_offer(
 
     original_rate = load["loadboard_rate"]
     floor = round(original_rate * rate_floor_percent, 2)
-    ceiling = round(
-        original_rate * rate_ceiling_percent, 2
-    )
+    ceiling = round(original_rate * rate_ceiling_percent, 2)
 
-    rate_diff = round(
-        req.offer_amount - original_rate, 2
-    )
+    rate_diff = round(req.offer_amount - original_rate, 2)
     if original_rate:
-        rate_diff_pct = round(
-            (rate_diff / original_rate) * 100, 2
-        )
+        rate_diff_pct = round((rate_diff / original_rate) * 100, 2)
     else:
         rate_diff_pct = 0.0
 
     agreed_pickup = req.agreed_pickup_datetime
     orig_pickup = load["pickup_datetime"]
-    pickup_changed = (
-        agreed_pickup is not None
-        and agreed_pickup != orig_pickup
-    )
+    pickup_changed = agreed_pickup is not None and agreed_pickup != orig_pickup
 
     result = insert_offer(
         {
