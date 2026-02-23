@@ -253,141 +253,172 @@ T_DROPPED = (
 #  transcript_key, summary, key_points)
 
 _BOOKED = [
+    # ── NORMAL MARGIN (~5.6%) — 2-round ─────────────────────────────
+    # loadboard_rate=2150, floor=1935, ceil=2365, agreed=2030
     (
         "LD-1001", "Dallas, TX", "Chicago, IL", "dry_van", 920,
-        2150, 2500, 2200, 0, 30, 9, 12, 258, 2, "positive", "2r",
-        "Carrier called on Dallas to Chicago dry van. Negotiated from $2,500 down to "
-        "$2,200 in 2 rounds. Carrier cited deadhead from Oklahoma City.",
+        1935, 2100, 2030, 0, 30, 9, 12, 258, 2, "positive", "2r",
+        "Carrier called on Dallas to Chicago dry van. Negotiated from $2,100 ask down to "
+        "$2,030 in 2 rounds. Carrier cited deadhead from Oklahoma City.",
         ["Carrier had ~150 mi deadhead from Oklahoma City",
-         "Rate negotiated from $2,500 to $2,200 in 2 rounds",
-         "Agreed $2,200 all-in — deal closed"],
+         "Rate negotiated from $2,100 ask to $2,030 in 2 rounds",
+         "Agreed $2,030 all-in — deal closed"],
     ),
+    # ── NORMAL MARGIN (~4.9%) — 2-round reefer ──────────────────────
+    # loadboard_rate=1850, floor=1665, ceil=2035, agreed=1760
     (
         "LD-1002", "Atlanta, GA", "Miami, FL", "reefer", 662,
-        1850, 2150, 1910, 8, 28, 11, 7, 231, 2, "positive", "reefer",
+        1665, 1830, 1760, 8, 28, 11, 7, 231, 2, "positive", "reefer",
         "Southeast Carriers called on Atlanta to Miami reefer. Carrier cited Miami reload "
-        "difficulty and deadhead. 2-round negotiation, settled $1,910.",
-        ["Carrier raised Miami dead-end concern",
+        "difficulty and reefer fuel costs. 2-round negotiation, settled $1,760.",
+        ["Carrier raised Miami dead-end concern and reefer fuel",
          "Quick 2-round negotiation — carrier familiar with lane",
-         "Agreed $1,910 all-in, temp 34°F confirmed"],
+         "Agreed $1,760 all-in, temp 34°F confirmed"],
     ),
+    # ── TIGHT MARGIN (~2.0%) — 3-round ──────────────────────────────
+    # loadboard_rate=980, floor=882, ceil=1078, agreed=960
     (
         "LD-1003", "Los Angeles, CA", "Phoenix, AZ", "flatbed", 373,
-        980, 1200, 1020, 3, 27, 14, 23, 312, 3, "neutral", "3r",
+        885, 1020, 960, 3, 27, 14, 23, 312, 3, "neutral", "3r",
         "Pacific Haul called on LA to Phoenix flatbed — steel coils. Three-round "
-        "negotiation. Carrier flagged weight at 44,000 lbs. Agreed $1,020.",
+        "negotiation. Carrier flagged weight at 44,000 lbs and tarping costs. Agreed $960.",
         ["Carrier flagged heavy load at 44,000 lbs near legal limit",
-         "Three rounds of negotiation required",
-         "Agreed $1,020 all-in — broker held tight on steel coil premium"],
+         "Three rounds of negotiation — carrier pushed hard on tarping premium",
+         "Agreed $960 all-in — tight margin after hard negotiation"],
     ),
+    # ── TIGHT MARGIN (~2.8%) — 3-round ──────────────────────────────
+    # loadboard_rate=1420, floor=1278, ceil=1562, agreed=1380
     (
         "LD-1004", "Houston, TX", "Memphis, TN", "dry_van", 586,
-        1420, 1750, 1480, 10, 25, 8, 44, 347, 3, "neutral", "3r",
+        1280, 1440, 1380, 10, 25, 8, 44, 347, 3, "neutral", "3r",
         "Gulf Coast Transport called on Houston to Memphis dry van. Three rounds — "
-        "carrier pushed on fuel and Memphis dead-end. Agreed $1,480.",
+        "carrier pushed on fuel costs and Memphis dead-end market. Agreed $1,380.",
         ["Carrier cited fuel costs and Memphis as tough reload market",
          "Three rounds before final agreement",
-         "Agreed $1,480 — within acceptable margin"],
+         "Agreed $1,380 all-in — tight margin after extended negotiation"],
     ),
+    # ── NORMAL MARGIN (~5.0%) — 2-round reefer ──────────────────────
+    # loadboard_rate=3200, floor=2880, ceil=3520, agreed=3040
     (
         "LD-1006", "Salinas, CA", "Denver, CO", "reefer", 1140,
-        3200, 3800, 3350, 4, 24, 7, 5, 389, 2, "positive", "reefer",
+        2880, 3150, 3040, 4, 24, 7, 5, 389, 2, "positive", "reefer",
         "Great Plains Trucking called on Salinas to Denver reefer — 1,140-mile produce haul. "
-        "Carrier had strong case for long-haul premium. Settled $3,350 in 2 rounds.",
+        "Carrier had strong case for long-haul reefer fuel. Settled $3,040 in 2 rounds.",
         ["Long-haul 1,140 miles — carrier had valid reefer fuel argument",
          "Pre-cool to 33°F requirement acknowledged",
-         "Agreed $3,350 all-in — 2-round quick deal"],
+         "Agreed $3,040 all-in — 2-round deal"],
     ),
+    # ── NORMAL MARGIN (~4.7%) — 2-round reefer ──────────────────────
+    # loadboard_rate=1380, floor=1242, ceil=1518, agreed=1315
     (
         "LD-1012", "Kansas City, MO", "Minneapolis, MN", "reefer", 443,
-        1380, 1650, 1440, 8, 22, 10, 18, 275, 2, "positive", "reefer",
+        1245, 1370, 1315, 8, 22, 10, 18, 275, 2, "positive", "reefer",
         "Southeast Carriers called on Kansas City to Minneapolis reefer — frozen meat. "
-        "Carrier cited temp certification. 2-round deal at $1,440.",
+        "Carrier cited temp certification costs. 2-round deal at $1,315.",
         ["Sealed trailer required — frozen meat at 0°F",
          "Carrier had temp certification on file",
-         "Agreed $1,440 all-in in 2 rounds"],
+         "Agreed $1,315 all-in in 2 rounds"],
     ),
+    # ── GREAT MARGIN (~9.0%) — 1-round quick ────────────────────────
+    # loadboard_rate=780, floor=702, ceil=858, agreed=710
     (
         "LD-1015", "Philadelphia, PA", "Richmond, VA", "reefer", 290,
-        780, 950, 820, 11, 20, 13, 33, 198, 2, "positive", "2r",
+        710, 710, 710, 11, 20, 13, 33, 198, 1, "positive", "quick",
         "Northern Star Logistics called on Philadelphia to Richmond dairy reefer. "
-        "Carrier positioned nearby with available reefer. Quick deal at $820.",
+        "Carrier positioned nearby with available reefer. Quick 1-round deal at $710.",
         ["Carrier had empty reefer nearby — strong positioning",
          "Short haul 290 miles, dairy at 36°F",
-         "Agreed $820 all-in — quick 2-round negotiation"],
+         "Agreed $710 all-in — quick 1-round acceptance"],
     ),
+    # ── GREAT MARGIN (~8.7%) — 1-round quick ────────────────────────
+    # loadboard_rate=750, floor=675, ceil=825, agreed=685
     (
         "LD-1018", "Louisville, KY", "St. Louis, MO", "dry_van", 264,
-        750, 900, 780, 7, 18, 9, 51, 187, 2, "positive", "2r",
+        685, 685, 685, 7, 18, 9, 51, 187, 1, "positive", "quick",
         "Midwest Express called on Louisville to St. Louis dry van. Short haul, "
-        "floor-loaded beverages. 2-round deal at $780.",
+        "floor-loaded beverages. Carrier accepted immediately at $685.",
         ["Floor-loaded beverages — no pallets, noted by carrier",
          "Carrier was positioning toward St. Louis anyway",
-         "Agreed $780 all-in after 2 rounds"],
+         "Agreed $685 all-in — 1-round quick deal"],
     ),
+    # ── NORMAL MARGIN (~5.1%) — 2-round ─────────────────────────────
+    # loadboard_rate=1280, floor=1152, ceil=1408, agreed=1215
     (
         "LD-1020", "San Antonio, TX", "New Orleans, LA", "dry_van", 542,
-        1280, 1550, 1340, 2, 16, 11, 9, 243, 2, "positive", "2r",
+        1155, 1260, 1215, 2, 16, 11, 9, 243, 2, "positive", "2r",
         "Lone Star Carriers called on San Antonio to New Orleans dry van. "
-        "Carrier had favorable positioning from SA. 2-round deal at $1,340.",
+        "Carrier had favorable positioning from SA. 2-round deal at $1,215.",
         ["Carrier positioned in San Antonio — minimal deadhead",
          "E-commerce fulfillment, dock lock required confirmed",
-         "Agreed $1,340 all-in in 2 rounds"],
+         "Agreed $1,215 all-in in 2 rounds"],
     ),
+    # ── GREAT MARGIN (~9.4%) — 1-round quick ────────────────────────
+    # loadboard_rate=850, floor=765, ceil=935, agreed=770
     (
         "LD-1025", "El Paso, TX", "Tucson, AZ", "flatbed", 263,
-        850, 1050, 890, 13, 14, 15, 22, 145, 1, "positive", "quick",
+        770, 770, 770, 13, 14, 15, 22, 145, 1, "positive", "quick",
         "Heartland Carriers called on El Paso to Tucson flatbed — solar equipment. "
-        "Quick 1-round deal, carrier repositioning that direction. $890 all-in.",
+        "Quick 1-round deal, carrier repositioning that direction. $770 all-in.",
         ["Carrier was repositioning El Paso to Tucson anyway",
          "Solar panels on pallets — edge protectors and tarps confirmed",
-         "1-round quick deal at $890 all-in"],
+         "1-round quick deal at $770 all-in"],
     ),
+    # ── NORMAL MARGIN (~4.7%) — 2-round ─────────────────────────────
+    # loadboard_rate=1180, floor=1062, ceil=1298, agreed=1125
     (
         "LD-1030", "Harrisburg, PA", "Charlotte, NC", "dry_van", 480,
-        1180, 1420, 1230, 5, 12, 8, 37, 267, 2, "positive", "2r",
+        1065, 1170, 1125, 5, 12, 8, 37, 267, 2, "positive", "2r",
         "Appalachian Freight called on Harrisburg to Charlotte dry van — furniture load. "
-        "Carrier familiar with lane. Clean 2-round deal at $1,230.",
+        "Carrier familiar with lane. Clean 2-round deal at $1,125.",
         ["Pad wrap / blanket wrap requirement confirmed",
          "Carrier runs this lane regularly",
-         "Agreed $1,230 all-in — 2-round deal"],
+         "Agreed $1,125 all-in — 2-round deal"],
     ),
+    # ── NEGATIVE MARGIN (~-3.6%) — 3-round ──────────────────────────
+    # loadboard_rate=1950, floor=1755, ceil=2145, agreed=2020
     (
         "LD-1031", "Atlanta, GA", "Dallas, TX", "dry_van", 781,
-        1950, 2350, 2030, 1, 10, 10, 14, 334, 3, "neutral", "3r",
+        1755, 2200, 2020, 1, 10, 10, 14, 334, 3, "neutral", "3r",
         "Blue Ridge Freight called on Atlanta to Dallas dry van — home improvement products. "
-        "Three rounds of negotiation. Carrier wanted $2,350, settled at $2,030.",
-        ["Carrier pushed hard for $2,350 citing fuel and long haul",
-         "Three rounds required — broker held margin discipline",
-         "Agreed $2,030 all-in — liftgate at delivery confirmed"],
+        "Three rounds of hard negotiation. Carrier pushed to $2,200, settled at $2,020. "
+        "Negative margin accepted to avoid load expiration.",
+        ["Carrier pushed hard citing fuel and long haul — opened at $2,200",
+         "Three rounds required — broker stretched beyond loadboard rate",
+         "Agreed $2,020 all-in — load was time-sensitive, liftgate at delivery confirmed"],
     ),
+    # ── NORMAL MARGIN (~4.5%) — 2-round ─────────────────────────────
+    # loadboard_rate=1550, floor=1395, ceil=1705, agreed=1480
     (
         "LD-1037", "Houston, TX", "Memphis, TN", "dry_van", 586,
-        1550, 1850, 1610, 4, 8, 7, 48, 289, 2, "positive", "2r",
+        1395, 1540, 1480, 4, 8, 7, 48, 289, 2, "positive", "2r",
         "Great Plains Trucking called on Houston to Memphis dry van — industrial equipment. "
-        "Carrier positioned in Houston. 2-round deal at $1,610.",
+        "Carrier positioned in Houston. 2-round deal at $1,480.",
         ["High-value cargo — carrier confirmed strapping capability",
          "Carrier had truck available in Houston yard",
-         "Agreed $1,610 all-in in 2 rounds"],
+         "Agreed $1,480 all-in in 2 rounds"],
     ),
+    # ── NEGATIVE MARGIN (~-3.6%) — 3-round ──────────────────────────
+    # loadboard_rate=1100, floor=990, ceil=1210, agreed=1140
     (
         "LD-1043", "Atlanta, GA", "Jacksonville, FL", "step_deck", 346,
-        1100, 1350, 1150, 12, 5, 14, 2, 251, 2, "positive", "2r",
+        990, 1250, 1140, 12, 5, 14, 2, 251, 3, "neutral", "3r",
         "Coastal Freight Solutions called on Atlanta to Jacksonville step deck — "
-        "transformer unit, 11ft over-height. Carrier verified wide-load permit on file. "
-        "Deal at $1,150.",
+        "transformer unit, 11ft over-height. Carrier had specialized equipment and "
+        "pushed hard on rate. Agreed $1,140 — negative margin on limited carrier pool.",
         ["Over-height 11ft transformer — wide load permit verified",
-         "Carrier had step deck with correct securement setup",
-         "Agreed $1,150 all-in — 2-round deal"],
+         "Carrier had step deck with correct securement — limited carrier pool",
+         "Agreed $1,140 all-in — specialized equipment justified premium"],
     ),
+    # ── GREAT MARGIN (~9.1%) — 1-round quick ────────────────────────
+    # loadboard_rate=550, floor=495, ceil=605, agreed=500
     (
         "LD-1047", "Dallas, TX", "Houston, TX", "power_only", 239,
-        550, 700, 580, 14, 3, 9, 27, 132, 1, "positive", "quick",
+        500, 500, 500, 14, 3, 9, 27, 132, 1, "positive", "quick",
         "TruckRight LLC called on Dallas to Houston power only. Hook-and-go drop trailer. "
-        "Carrier repositioning south. Quick 1-round deal at $580.",
+        "Carrier repositioning south. Quick 1-round deal at $500.",
         ["Drop-and-hook trailer — carrier confirmed 53ft capacity",
          "Carrier was repositioning Dallas to Houston anyway",
-         "Quick 1-round deal at $580 all-in"],
+         "Quick 1-round deal at $500 all-in"],
     ),
 ]
 
