@@ -34,11 +34,12 @@ async def create_booking(req: BookedLoadRequest):
     dependencies=[Security(verify_api_key)],
 )
 async def list_all_bookings(
-    offset: int = Query(0, ge=0),
-    limit: int = Query(20, ge=1, le=100),
+    page: int = Query(1, ge=1),
+    page_size: int = Query(20, ge=1, le=100),
 ):
     """List confirmed bookings with pagination."""
-    return list_bookings(offset=offset, limit=limit)
+    offset = (page - 1) * page_size
+    return list_bookings(offset=offset, limit=page_size, page=page, page_size=page_size)
 
 
 @router.get(

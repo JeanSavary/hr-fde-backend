@@ -70,8 +70,8 @@ class BookedLoadResponse(BaseModel):
 class PaginatedBookedLoads(BaseModel):
     items: list[BookedLoadResponse]
     total: int
-    offset: int
-    limit: int
+    page: int
+    page_size: int
 
 
 class OfferCreateRequest(BaseModel):

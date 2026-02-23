@@ -62,11 +62,11 @@ def get_booking(
     return _enrich_booking(record) if record else None
 
 
-def list_bookings(offset: int = 0, limit: int = 20) -> PaginatedBookedLoads:
+def list_bookings(offset: int = 0, limit: int = 20, page: int = 1, page_size: int = 20) -> PaginatedBookedLoads:
     rows, total = get_all_booked_loads(offset=offset, limit=limit)
     return PaginatedBookedLoads(
         items=[_enrich_booking(r) for r in rows],
         total=total,
-        offset=offset,
-        limit=limit,
+        page=page,
+        page_size=page_size,
     )
