@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from fastapi import HTTPException
@@ -17,12 +18,20 @@ from app.db.repositories.call_repo import (
 from app.utils.period import period_since
 from app.db.repositories.carrier_repo import insert_interaction
 
+log = logging.getLogger(__name__)
+
 
 def log_call(req: CallLogRequest) -> CallLogResponse:
+    log.info("POST /api/calls received: call_id=%s outcome=%s load_id=%s",
+             req.call_id, req.outcome.value, req.load_id)
+
     call_data = req.model_dump()
     call_data["outcome"] = req.outcome.value
     call_data["sentiment"] = req.sentiment.value
     result = insert_call(call_data)
+
+    log.info("Call inserted: id=%s call_id=%s created_at=%s",
+             result["id"], result["call_id"], result["created_at"])
 
     # Cascade: create carrier interaction record
     if req.mc_number:
@@ -37,6 +46,13 @@ def log_call(req: CallLogRequest) -> CallLogResponse:
                 "notes": "",
             }
         )
+
+    # Verify the call is readable from DB
+    verify = get_call_by_call_id(result["call_id"])
+    if verify:
+        log.info("DB verify OK: call_id=%s is in DB", result["call_id"])
+    else:
+        log.error("DB verify FAILED: call_id=%s NOT found after insert!", result["call_id"])
 
     # Booking is handled separately via POST /api/booked-loads
     # (triggered by the HappyRobot platform after the call)

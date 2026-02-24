@@ -2,16 +2,9 @@
 # See https://fly.io/docs/reference/configuration/
 
 app = 'hr-fde-backend'
-primary_region = 'cdg'
+primary_region = 'ewr'
 
 [build]
-
-[env]
-  DB_PATH = "/data/carrier.db"
-
-[mounts]
-  source = "hr_data"
-  destination = "/data"
 
 [http_service]
   internal_port = 8000

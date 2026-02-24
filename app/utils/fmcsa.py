@@ -72,8 +72,6 @@ async def lookup_fmcsa(mc_number: str, web_key: str = "") -> FMCSACarrier:
             for attempt in range(1, _RETRY_ATTEMPTS + 1):
                 try:
                     resp = await client.get(url)
-                    print(resp.status_code)
-                    print(resp.json())
                     if resp.status_code == 200:
                         data = resp.json()
                         content = data.get("content", [])
